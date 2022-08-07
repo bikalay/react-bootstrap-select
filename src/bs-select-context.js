@@ -1,11 +1,14 @@
+import {applyStyles} from "@popperjs/core";
 import React from "react";
 /**
- * @type {{onSelect: Function | null, currentValue: string | null}}
+ * @type {{onSelect: Function | null, selectedValue: string | null, applyedValue: string | null}}
  */
-const defaultContextValue  = {
+const defaultContextValue = {
   onSelect: null,
-  currentValue: null
-}
-const BSSelectContext = React.createContext(defaultContextValue);
-export default BSSelectContext;
+  selectedValue: null,
+  applyedValue: null,
+};
 
+const BSSelectContext = React.createContext(defaultContextValue);
+
+export default BSSelectContext;

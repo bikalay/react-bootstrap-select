@@ -16,9 +16,9 @@ import BSSelectContext from "./bs-select-context";
  */
 const BSOption = (props) => {
   const {value, children, formatSelectedText, disabled} = props;
-  const {onSelect, currentValue} = useContext(BSSelectContext);
+  const {onSelect, selectedValue, applyedValue} = useContext(BSSelectContext);
   const classes = ["dropdown-item"];
-  if (currentValue === value) {
+  if (selectedValue === value) {
     classes.push("active");
   } else if (disabled) {
     classes.push("text-muted");

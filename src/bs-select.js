@@ -1,4 +1,5 @@
-import React, {useState, useCallback} from "react";
+import React, {useState, useCallback, useRef} from "react";
+import {Dropdown} from "bootstrap";
 import BSSelectContext from "./bs-select-context";
 
 /**
@@ -21,22 +22,16 @@ import BSSelectContext from "./bs-select-context";
  * @param {BSSelectProps} props
  */
 const BSSelect = (props) => {
-  const {children, value, tabIndex=0} = props;
-  const selectedItem = children?.find((child) => {
+  const {children = [], value, tabIndex = 0} = props;
+  const dropdown = useRef(null);
+  const selectedItem = children.find((child) => {
     return !value || child.props.value === value;
   });
   const getOptionText = (node) => {
-    if (typeof node === "string") {
-      return node;
-    }
-    if (node && node.children) {
-      return node.children
-        .map((child) => {
-          return getOptionText(child);
-        })
-        .join(" ")
-        .trim();
-    }
+    if (["string", "number"].includes(typeof node)) return node;
+    if (node instanceof Array) return node.map(getOptionText).join("");
+    if (typeof node === "object" && node)
+      return getOptionText(node.props.children);
   };
 
   const currentValue = selectedItem ? selectedItem.props.value : "";
@@ -51,11 +46,51 @@ const BSSelect = (props) => {
   }
   const [selectedText, setSelectedText] = useState(defaultPlaceholder);
   const [selectedValue, setSelectedValue] = useState(currentValue);
+  const [applyedValue, setAppliedValue] = useState(currentValue);
   const onKeyPress = (event) => {
-    console.log(event);
+    const currentIndex = children.findIndex(
+      (child) => child.props.value === selectedValue,
+    );
+    const dd = new Dropdown(dropdown.current);
+
+    switch (event.key) {
+      case "ArrowUp":
+        if (currentIndex !== -1 && currentIndex > 0) {
+          const selectedItem = children[currentIndex - 1];
+          if (selectedItem) {
+            setSelectedValue(selectedItem.props.value);
+          }
+        }
+        break;
+      case "ArrowDown":
+        if (currentIndex !== -1 && currentIndex < children.length - 1) {
+          const selectedItem = children[currentIndex + 1];
+          if (selectedItem) {
+            setSelectedValue(selectedItem.props.value);
+          }
+        }
+        break;
+      case "Enter":
+        const selectedItem = children[currentIndex];
+        setAppliedValue(selectedItem.props.value);
+        if (selectedItem.props.formatSelectedText) {
+          setSelectedText(selectedItem.props.formatSelectedText(value));
+        } else {
+          setSelectedText(getOptionText(selectedItem.props.children));
+        }
+        dd.hide();
+        break;
+      case "Escape":
+        setSelectedValue(applyedValue);
+        dd.hide();
+        break;
+      default:
+        break;
+    }
+    console.log(event.key);
     event.preventDefault();
     event.stopPropagation();
-  }
+  };
 
   /**
    * onSelect.
@@ -63,14 +98,15 @@ const BSSelect = (props) => {
    */
   const onSelect = (value, node, formatSelectedText) => {
     setSelectedValue(value);
+    setAppliedValue(value);
     if (formatSelectedText) {
       return setSelectedText(formatSelectedText(value));
     }
     return setSelectedText(getOptionText(node));
   };
   return (
-    <BSSelectContext.Provider value={{onSelect, currentValue: selectedValue}}>
-      <div className="dropdown bs-select" >
+    <BSSelectContext.Provider value={{onSelect, selectedValue, applyedValue}}>
+      <div className="dropdown bs-select" ref={dropdown}>
         <div
           tabIndex={tabIndex}
           data-bs-toggle="dropdown"
