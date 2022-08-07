@@ -7,6 +7,7 @@ import BSSelectContext from "./bs-select-context";
  * @property {string=} name
  * @property {string=} id
  * @property {string=} value
+ * @property {stirng=} defaultValue
  * @property {boolean=} disabled
  * @property {string=} form
  * @property {boolean=} required
@@ -22,7 +23,7 @@ import BSSelectContext from "./bs-select-context";
  * @param {BSSelectProps} props
  */
 const BSSelect = (props) => {
-  const {children = [], value, tabIndex = 0} = props;
+  const {children = [], value, tabIndex = 0, name, defaultValue} = props;
   const dropdown = useRef(null);
   const selectedItem = children.find((child) => {
     return !value || child.props.value === value;
@@ -55,6 +56,7 @@ const BSSelect = (props) => {
 
     switch (event.key) {
       case "ArrowUp":
+      case "k":
         if (currentIndex !== -1 && currentIndex > 0) {
           const selectedItem = children[currentIndex - 1];
           if (selectedItem) {
@@ -62,7 +64,9 @@ const BSSelect = (props) => {
           }
         }
         break;
+
       case "ArrowDown":
+      case "j":
         if (currentIndex !== -1 && currentIndex < children.length - 1) {
           const selectedItem = children[currentIndex + 1];
           if (selectedItem) {
@@ -87,9 +91,7 @@ const BSSelect = (props) => {
       default:
         break;
     }
-    console.log(event.key);
     event.preventDefault();
-    event.stopPropagation();
   };
 
   /**
@@ -113,6 +115,7 @@ const BSSelect = (props) => {
           className="form-control dropdown-toggle d-flex align-items-center"
           onKeyUp={onKeyPress}
         >
+          <input type="hidden" name={name} defaultValue={defaultValue} value={applyedValue}/>
           <div className={`flex-grow-1 ${selectedValue ? "" : "text-muted"}`}>
             {selectedText || <span>&nbsp;</span>}
           </div>

@@ -4,7 +4,7 @@
   "description": "react bootstrap select based on bootstrap dropdown",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "sb": "start-storybook -p 6006",
     "build-sb": "build-storybook",
     "dts": "npm-dts generate --entry=index.js -L debug"
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
@@ -27,6 +28,7 @@
     "@storybook/manager-webpack4": "^6.5.10",
     "@storybook/react": "^6.5.10",
     "@storybook/testing-library": "^0.0.13",
+    "@testing-library/react": "^13.3.0",
     "@types/react": "^18.0.15",
     "babel-loader": "^8.2.5",
     "jest": "^28.1.3",
