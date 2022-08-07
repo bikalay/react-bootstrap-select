@@ -1,0 +1,6 @@
+.bs-select .dropdown-toggle {
+  display: relative;
+}
+.bs-select .dropdown-toggle::after {
+   position: absolute;
+}

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "checkJs": true,
+    "allowJs": true,
+    "noEmit": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "types": ["node", "jest"],
+    "jsx": "react-jsx",
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", "coverage"]
+}
