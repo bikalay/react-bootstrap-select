@@ -7,15 +7,16 @@ import BSSelectContext from "./bs-select-context";
  * @property {string=} name
  * @property {string=} id
  * @property {string=} value
- * @property {stirng=} defaultValue
+ * @property {string=} defaultValue
  * @property {boolean=} disabled
  * @property {string=} form
  * @property {boolean=} required
  * @property {number=} size
  * @property {boolean=} multiple
- * @property {JSX.Element[]=} children
+ * @property {JSX.Element[] | JSX.Element=} children
  * @property {string=} placeholder
  * @property {number=} tabIndex
+ * @property {string=} dataTestId
  */
 
 /**
@@ -23,11 +24,30 @@ import BSSelectContext from "./bs-select-context";
  * @param {BSSelectProps} props
  */
 const BSSelect = (props) => {
-  const {children = [], value, tabIndex = 0, name, defaultValue} = props;
+  const {value, tabIndex = 0, name, defaultValue, dataTestId} = props;
+  /**
+   * @type {JSX.Element[]}
+   */
+  let children;
+  if (!props.children) {
+    children = [];
+  } else if (!Array.isArray(props.children)) {
+    children = [props.children];
+  } else {
+    children = props.children;
+  }
+
+  children = Array.isArray(children) ? children : [children];
+
   const dropdown = useRef(null);
   const selectedItem = children.find((child) => {
     return !value || child.props.value === value;
   });
+  /**
+   * getOptionText.
+   *
+   * @param {JSX.Element} node
+   */
   const getOptionText = (node) => {
     if (["string", "number"].includes(typeof node)) return node;
     if (node instanceof Array) return node.map(getOptionText).join("");
@@ -108,14 +128,23 @@ const BSSelect = (props) => {
   };
   return (
     <BSSelectContext.Provider value={{onSelect, selectedValue, applyedValue}}>
-      <div className="dropdown bs-select" ref={dropdown}>
+      <div
+        data-testid={dataTestId}
+        className="dropdown bs-select"
+        ref={dropdown}
+      >
         <div
           tabIndex={tabIndex}
           data-bs-toggle="dropdown"
           className="form-control dropdown-toggle d-flex align-items-center"
           onKeyUp={onKeyPress}
         >
-          <input type="hidden" name={name} defaultValue={defaultValue} value={applyedValue}/>
+          <input
+            type="hidden"
+            name={name}
+            defaultValue={defaultValue}
+            value={applyedValue}
+          />
           <div className={`flex-grow-1 ${selectedValue ? "" : "text-muted"}`}>
             {selectedText || <span>&nbsp;</span>}
           </div>

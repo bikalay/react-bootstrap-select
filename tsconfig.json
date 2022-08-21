@@ -7,7 +7,7 @@
     "noEmit": true,
     "strict": true,
     "noImplicitAny": false,
-    "types": ["node", "jest"],
+    "types": ["node", "jest", "@testing-library/jest-dom"],
     "jsx": "react-jsx",
     "esModuleInterop": true
   },

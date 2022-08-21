@@ -1,7 +1,7 @@
 import {applyStyles} from "@popperjs/core";
 import React from "react";
 /**
- * @type {{onSelect: Function | null, selectedValue: string | null, applyedValue: string | null}}
+ * @type {{onSelect?: Function | null, selectedValue?: string | null, applyedValue?: string | null}}
  */
 const defaultContextValue = {
   onSelect: null,

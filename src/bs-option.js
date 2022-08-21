@@ -7,6 +7,7 @@ import BSSelectContext from "./bs-select-context";
  * @property {boolean=} disabled
  * @property {React.ReactNode=} children
  * @property {(value:string)=>string=} formatSelectedText
+ * @property {string=} dataTestId
  */
 
 /**
@@ -15,8 +16,8 @@ import BSSelectContext from "./bs-select-context";
  * @param {BSOptionProps} props
  */
 const BSOption = (props) => {
-  const {value, children, formatSelectedText, disabled} = props;
-  const {onSelect, selectedValue, applyedValue} = useContext(BSSelectContext);
+  const {value, children, formatSelectedText, disabled , dataTestId} = props;
+  const {onSelect, selectedValue} = useContext(BSSelectContext);
   const classes = ["dropdown-item"];
   if (selectedValue === value) {
     classes.push("active");
@@ -25,6 +26,7 @@ const BSOption = (props) => {
   }
   return (
     <li
+      data-testid={dataTestId}
       className={classes.join(" ")}
       onClick={() => {
         if (onSelect && !disabled) {
